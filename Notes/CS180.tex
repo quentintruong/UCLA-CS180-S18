@@ -1,0 +1,151 @@
+\documentclass[11pt, oneside]{article}  
+\usepackage[margin=0.5in]{geometry} % Margins
+\usepackage[ampersand]{easylist} % Bullets for lists
+\usepackage[bottom]{footmisc}  % Glue footnotes to bottom
+\usepackage{graphicx}
+\usepackage{float}
+\graphicspath{ {imgs/} }
+
+
+\title{Algorithms and Complexity\\UCLA-CS180-S18}
+\author{Quentin Truong\\Taught by Professor Meka}
+\date{Spring 2018}
+
+
+\begin{document}
+\maketitle
+\tableofcontents
+\pagenumbering{arabic}
+\clearpage
+
+
+%========================================================
+\section{Algorithm Design: Ch5: Divide and Conquer}
+\subsection{Introduction}
+	\begin{easylist}  
+	\ListProperties(Hide=100, Hang=true, Progressive=4ex, Style*=--\ , Style2*=$\bullet\ $)
+        & Divide and conquer
+        && Class of algorithmic techniques in which one breaks input into several parts, solves subproblems recursively, and recombines into overall solution
+        & Analyze running time
+        && Generally will use recurrence relations
+        && For divide and conquer problems, the brute force solution is typically polynomial; we are trying for a lower polynomial
+	\end{easylist}
+
+\subsection{A First Recurrence: The Mergesort Algorithm}
+    \begin{easylist}  
+    \ListProperties(Hide=100, Hang=true, Progressive=4ex, Style*=--\ , Style2*=$\bullet\ $)
+        & Mergesort
+        && Sort list of numbers by dividing into two equal halves, solving each half recursively, and recombining solutions
+        && T(n) $\le$ 2T(n/2) + O(n)
+        && Ignore ceiling and floor issues for odd numbers, b/c not actually impactful
+        & Approaches to Solving Recurrences
+        && Unrolling the recurrence into a graph allows us to see how many operations are performed at each level
+        &&& Identify the pattern, and sum over all levels
+        && Substituting a solution into the recurrence
+        &&& Requires a guess
+        && Partial substitution can determine the constants
+        &&& Useful for determining exact constants if we know the general form of the solution
+    \end{easylist}
+
+\subsection{Further Recurrence Relations}
+    \begin{easylist}  
+    \ListProperties(Hide=100, Hang=true, Progressive=4ex, Style*=--\ , Style2*=$\bullet\ $)
+        & 5.3 T(n) $\le$ qT(n/2) + cn
+        & 5.4 Any function T() satisfiyng 5.3 with q \textgreater 2 is bounded by O($n^{\log_2q}$)
+        & 5.5 Any function T() satisfying 5.3 with q=1 is bounded by O(n)
+        & 5.6 T(n) $\le$ 2T(n/2) + cn$^2$
+    \end{easylist}
+
+\subsection{Counting Inversions}
+    \begin{easylist}  
+    \ListProperties(Hide=100, Hang=true, Progressive=4ex, Style*=--\ , Style2*=$\bullet\ $)
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale=.6]{./imgs/count_inversions.png}
+        \end{figure}
+        & Application of Counting Inversions
+        && Analysis of rankings
+        &&& Collaborative filtering, to match preferences to those of other people on the Internet
+        &&& Recommend things according to what other similar people like
+        && Meta-search tools
+        &&& Execute same query on different search engines
+        &&& Measure how "out of order" the different orderings are
+        && Generally
+        &&& Given a sequence of distinct numbers, measure how far the list is from being in ascending order
+        &&& Number should increase as more scrambled
+        & More formal definition of Counting Inversions
+        && Count the number of indices i \textless j which form an inversion, a$_i$ \textgreater a$_j$
+        & Algorithm
+        && Divide list in two halves, recursively sort and count inversions for each
+        && To recombine two halves, take min of each sorted half
+        && If take min from first half, no inversions are added
+        && If take min from the second half, then add the number of remaining elements from the first half to the inversion count
+    \end{easylist}
+
+\subsection{Finding the Closest Pair of Points}
+    \begin{easylist}  
+    \ListProperties(Hide=100, Hang=true, Progressive=4ex, Style*=--\ , Style2*=$\bullet\ $)
+        & 1D Algorithm
+        && Sort; min must be adjacent to each other, so traverse
+        & 2D Algorithm
+        && P$_x$ are the points sorted with respect to x
+        && P$_y$ are the points sorted with respect to y
+        && L is the line dividing P$_x$ in half
+        && Q are first half of points in P$_x$
+        && R are second half of points in P$_x$
+        && Recursively determine closest pair of points in Q; then in R
+        && $\delta$ = min(d($q_0^*,q_1^*$), d($r_0^*,r_1^*$))
+        && If there exists q $\in$ Q and r $\in$ R for which d(q, r) \textless $\delta$, then each of q and r lies within a distance of $\delta$ of L
+        && If s, s$^\prime$ have d(s, s$^\prime$), then s and s$^\prime$ are within 15 positions of each other in the sorted S$_y$
+        &&& Each box has sidelength ($\delta$/2), and at most one point (b/c if had more than one point, $delta$ would be different)
+        &&& 16 boxes leads to 16 possible positions
+        &&& Can reduce down to 5 possible positions using packing arguments
+        &&& Linear time to try/fail find a position in S
+        && Bruteforce for $P \le 3$
+        && Satisfies recurence found in 5.1 to achieve O(nlogn)
+    \end{easylist}
+
+\subsection{Integer Multiplication}
+    \begin{easylist}  
+    \ListProperties(Hide=100, Hang=true, Progressive=4ex, Style*=--\ , Style2*=$\bullet\ $)
+        & Multiplication
+        && Adding up partial products works the same in base-10 as in base-2
+        & Karatsuba's Algorithm
+        && Based on breaking up partial sums
+        && $xy = (x_1 * 2^{n/2} + x_0)(y_1 * 2^{n/2} + y_0$
+        && $ = x_1y_1 * 2^n + (x_1y_0 + x_0y_1) * 2^{n/2} + x_0y_0$
+        && This achieves T(n) $\le$ 4T(n/2) + cn = O(n$^2$)
+        && $(x_1 + x_0)(y_1 + y_0) = x_1y_1 + x_1y_0 + x_0y_1 + x_0y_0$
+        && Subtract away $x_1y_1$ and $x_0y_0$
+        & Analysis
+        && T(N) $\le$ 3T(n/2) + O(n)
+        && O($n^{log_23}$)
+    \end{easylist}
+
+\subsection{Convolutions and the Fast Fourier Transform}
+    \begin{easylist}  
+    \ListProperties(Hide=100, Hang=true, Progressive=4ex, Style*=--\ , Style2*=$\bullet\ $)
+        & Convolution
+        && Take two vectors of length n and produce a vector of 2n - 1 coordinates
+        && $\sum_{(i,j):i+j=k;i,j<n}a_ib_j$
+        && Many applications, especially in signal processing
+        & Fast Fourier Transform
+        && Can calculate convoution in nlogn
+        && Product of polynomials is equivalent to convolution
+        && Reconstruct C from values on the (2n)$^{th}$ roots of complex roots of unity
+        && Coefficients of C are coordinates of convolution vector
+    \end{easylist}
+\clearpage
+%========================================================
+
+%========================================================
+\section{Ch1: }
+\subsection{Introduction}
+    \begin{easylist}  
+    \ListProperties(Hide=100, Hang=true, Progressive=4ex, Style*=--\ , Style2*=$\bullet\ $)
+        & 
+    \end{easylist}
+\clearpage
+%========================================================
+
+\end{document}
