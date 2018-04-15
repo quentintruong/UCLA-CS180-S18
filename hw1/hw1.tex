@@ -1,0 +1,507 @@
+\documentclass[11pt, oneside]{article}  
+\usepackage[margin=0.5in]{geometry} % Margins
+\usepackage[ampersand]{easylist} % Bullets for lists
+\usepackage[bottom]{footmisc}  % Glue footnotes to bottom
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{array,mathtools}
+
+\newcommand*{\carry}[1][1]{\overset{#1}}
+\newcolumntype{B}[1]{r*{#1}{@{\,}r}}
+
+\title{Homework 1\\UCLA-CS180-S18}
+\author{Quentin Truong}
+
+
+\begin{document}
+\maketitle
+\pagenumbering{arabic}
+
+
+%========================================================
+\section{Question 1}
+
+\begin{align*}
+f_6(n) &= 2^{(logn)^{0.9}} \\
+f_1(n) &= n^3 \\
+f_5(n) &= 2^{3\sqrt{n}} \\ 
+f_4(n) &= 2^{nlogn} \\
+f_3(n) &= n(logn)^{1000}\\
+f_2(n) &= 1000n^5/2 \\
+\end{align*}
+
+\clearpage
+%========================================================
+
+%========================================================
+\section{Question 2}
+
+\begin{align*} 
+\text{Initial values } & a = 10110100, b = 10111101 \\
+\text{Split up number } & a_{1} = 1011, a_{0} = 0100 \\
+\text{Split up number } & b_{1} = 1011, b_{0} = 1101 \\
+\text{Compute } & a_{1} + a_{0} \\
+& \begin{array}{B3}
+           & 1011 \\
+      {} + & 0100 \\ 
+      \hline
+           & 1111 \\
+\end{array} \\
+\text{Compute } & b_{1} + b_{0} \\
+& \begin{array}{B3}
+           & \carry 1 \carry 0 \carry 11 \\
+      {} + & 1101 \\ 
+      \hline
+           & 11000 \\
+\end{array} \\
+\text{Recursively multiply } & a_{1}, b_{1} \\
+& 1111001 \text{(See next page)} \\ 
+\text{Recursively multiply } & a_{0}, b_{0} \\
+& 110100 \text{(See third page from here)} \\
+\text{Recursively multiply } & a_{1} + a_{0}, b_{1} + b_{0} \\
+& 101101000 \text{(See four pages from here)} \\
+\text{Compute } & (a_{1} * b_{0} + a_{0} * b_{1}) = (a_{1} + a_{0}) * (b_{1} + b_{0}) - (a_{1} * b_{1}) - (a_{0} * b_{0}) \\
+& \begin{array}{B3}
+           & 101101000 \\
+      {} - &   1111001 \\ 
+      {} - &    110100 \\ 
+      \hline
+           &  10111011 \\
+\end{array} \\
+\text{Shift } & 2^n * (a_{1} * b_{1}) \\ 
+& 111100100000000 \\
+\text{Shift } & 2^{n/2} * (a_{1} * b_{0} + a_{0} * b_{1}) \\
+&    101110110000 \\
+\text{Add } & 2^n * (a_{1} * b_{1}) + 2^{n/2} * (a_{1} * b_{0} + a_{0} * b_{1}) + (a_{0} * b_{0}) \\
+& 1000010011100100 \\
+\end{align*}
+
+\begin{align*}
+\text{Initial values } & a_{1} = 1011, b_{1} = 1011 \\
+\text{Split up number } & a_{11} = 10, a_{10} = 11 \\
+\text{Split up number } & b_{11} = 10, b_{10} = 11 \\
+\text{Compute } & a_{11} + a_{10} \\
+& \begin{array}{B3}
+           & 10 \\
+      {} + & 11 \\ 
+      \hline
+           & 101 \\
+\end{array} \\
+\text{Compute } & b_{11} + b_{10} \\
+& \begin{array}{B3}
+           & 10 \\
+      {} + & 11 \\ 
+      \hline
+           & 101 \\
+\end{array} \\
+\text{Recursively multiply } & a_{11}, b_{11} \\
+& \begin{array}{B3}
+           & 10 \\
+      {} * & 10 \\ 
+      \hline
+           & 00 \\
+           & 100 \\
+      \hline
+           & 100 \\
+\end{array} \\
+\text{Recursively multiply } & a_{10}, b_{10} \\
+& \begin{array}{B3}
+           & 11 \\
+      {} * & 11 \\ 
+      \hline
+           & \carry 0 11 \\
+           & 110 \\
+      \hline
+           & 1001 \\
+\end{array} \\
+\text{Recursively multiply } & a_{11} + a_{10}, b_{11} + b_{10} \\
+& 11001 \text{(See next page)} \\
+\text{Compute } & (a_{11} * b_{10} + a_{10} * b_{11}) = (a_{11} + a_{10}) * (b_{11} + b_{10}) - (a_{11} * b_{11}) - (a_{10} * b_{10}) \\
+& \begin{array}{B3}
+           & 11001 \\
+      {} - &   100 \\ 
+      {} - &  1001 \\ 
+      \hline
+           &  1100 \\
+\end{array} \\
+\text{Shift } & 2^n * (a_{11} * b_{11}) \\ 
+& 1000000 \\
+\text{Shift } & 2^{n/2} * (a_{11} * b_{10} + a_{10} * b_{11}) \\
+&  110000 \\
+\text{Add } & 2^n * (a_{11} * b_{11}) + 2^{n/2} * (a_{11} * b_{10} + a_{10} * b_{11}) + (a_{10} * b_{10}) \\
+& 1111001 \\
+\end{align*}
+
+\begin{align*}
+\text{Initial values } & a_{11+10} = 101, b_{11+10} = 101 \\
+\text{Split up number } & a_{11+10,1} = 10, a_{11+10,0} = 1 \\
+\text{Split up number } & b_{11+10,1} = 10, b_{11+10,0} = 1 \\
+\text{Compute } & a_{11+10,1} + a_{11+10,0} \\
+& \begin{array}{B3}
+           & 10 \\
+      {} + & 1 \\ 
+      \hline
+           & 11 \\
+\end{array} \\
+\text{Compute } & b_{11+10,1} + b_{11+10,0} \\
+& \begin{array}{B3}
+           & 10 \\
+      {} + & 1 \\ 
+      \hline
+           & 11 \\
+\end{array} \\
+\text{Recursively multiply } & a_{11+10,1}, b_{11+10,1} \\
+& \begin{array}{B3}
+           & 10 \\
+      {} * & 10 \\ 
+      \hline
+           & 00 \\
+           & 100 \\
+      \hline
+           & 100 \\
+\end{array} \\
+\text{Recursively multiply } & a_{11+10,0}, b_{11+10,0} \\
+& \begin{array}{B3}
+           & 1 \\
+      {} * & 1 \\ 
+      \hline
+           & 1 \\
+\end{array} \\
+\text{Recursively multiply } & a_{11+10,1} + a_{11+10,0}, b_{11+10,1} + b_{11+10,0} \\
+& \begin{array}{B3}
+           & 11 \\
+      {} * & 11 \\ 
+      \hline
+           & \carry011 \\
+           & 110 \\
+      \hline
+           & 1001 \\
+\end{array} \\
+\text{Compute } & (a_{11+10,1} * b_{11+10,0} + a_{11+10,0} * b_{11+10,1}) \\ 
+& = (a_{11+10,1} + a_{11+10,0}) * (b_{11+10,1} + b_{11+10,0}) \\ 
+& - (a_{11+10,1} * b_{11+10,1}) \\
+& - (a_{11+10,0} * b_{11+10,0}) \\
+& \begin{array}{B3}
+           & 1001 \\
+      {} - & 100 \\ 
+      {} - & 1 \\
+      \hline
+           & 100 \\
+\end{array} \\
+\text{Shift } & 2^n * (a_{11+10,1} * b_{11+10,1}) \\ 
+& 10000 \\
+\text{Shift } & 2^{n/2} * (a_{11+10,1} * b_{11+10,0} + a_{11+10,0} * b_{11+10,1}) \\
+& 1000 \\
+\text{Add } & 2^n * (a_{11+10,1} * b_{11+10,1}) + 2^{n/2} * (a_{11+10,1} * b_{11+10,0} + a_{11+10,0} * b_{11+10,1}) + (a_{11+10,0} * b_{11+10,0}) \\
+& 11001 \\
+\end{align*}
+
+\begin{align*}
+\text{Initial values } & a_{0} = 0100, b_{0} = 1101 \\
+\text{Split up number } & a_{01} = 01, a_{00} = 00 \\
+\text{Split up number } & b_{01} = 11, b_{00} = 01 \\
+\text{Compute } & a_{01} + a_{00} \\
+& \begin{array}{B3}
+           & 01 \\
+      {} + & 00 \\ 
+      \hline
+           & 01 \\
+\end{array} \\
+\text{Compute } & b_{01} + b_{00} \\
+& \begin{array}{B3}
+           & \carry 11 \\
+      {} + & 01 \\ 
+      \hline
+           & 100 \\
+\end{array} \\
+\text{Recursively multiply } & a_{01}, b_{01} \\
+& \begin{array}{B3}
+           & 01 \\
+      {} * & 11 \\ 
+      \hline
+           & 01 \\
+           & 010 \\
+      \hline
+           & 011 \\
+\end{array} \\
+\text{Recursively multiply } & a_{00}, b_{00} \\
+& \begin{array}{B3}
+           & 00 \\
+      {} * & 01 \\ 
+      \hline
+           & 00 \\
+           & 00 \\
+      \hline
+           & 00 \\
+\end{array} \\
+\text{Recursively multiply } & a_{01} + a_{00}, b_{01} + b_{00} \\
+& 100 \text{(1 multiplied by x is x)} \\
+\text{Compute } & (a_{01} * b_{00} + a_{00} * b_{01}) = (a_{01} + a_{00}) * (b_{01} + b_{00}) - (a_{01} * b_{01}) - (a_{00} * b_{00}) \\
+& \begin{array}{B3}
+           & 100 \\
+      {} - & 11 \\ 
+      {} - & 00 \\
+      \hline
+           & 01 \\
+\end{array} \\
+\text{Shift } & 2^n * (a_{01} * b_{01}) \\ 
+& 110000 \\
+\text{Shift } & 2^{n/2} * (a_{01} * b_{00} + a_{00} * b_{01}) \\
+& 100 \\
+\text{Add } & 2^n * (a_{01} * b_{01}) + 2^{n/2} * (a_{01} * b_{00} + a_{00} * b_{01}) + (a_{00} * b_{00}) \\
+& 110100 \\ 
+\end{align*}
+
+\begin{align*}
+\text{Initial values } & a_{1+0} = 1111, b_{1+0} = 11000 \\
+\text{Split up number } & a_{1+0,1} = 11, a_{1+0,0} = 11 \\
+\text{Split up number } & b_{1+0,1} = 110, b_{1+0,0} = 00 \\
+\text{Compute } & a_{1+0,1} + a_{1+0,0} \\
+& \begin{array}{B3}
+           & \carry 11 \\
+      {} + & 11 \\ 
+      \hline
+           & 110 \\
+\end{array} \\
+\text{Compute } & b_{1+0,1} + b_{1+0,0} \\
+& \begin{array}{B3}
+           & 110 \\
+      {} + & 00 \\ 
+      \hline
+           & 110 \\
+\end{array} \\
+\text{Recursively multiply } & a_{1+0,1}, b_{1+0,1} \\
+& 10010 \text{(See next page)} \\
+\text{Recursively multiply } & a_{1+0,0}, b_{1+0,0} \\
+& \begin{array}{B3}
+           & 11 \\
+      {} * & 00 \\ 
+      \hline
+           & 00 \\
+           & 000 \\
+      \hline
+           & 000 \\
+\end{array} \\
+\text{Recursively multiply } & a_{1+0,1} + a_{1+0,0}, b_{1+0,1} + b_{1+0,0} \\
+& 100100 \text{(See second page from here)} \\
+\text{Compute } & (a_{1+0,1} * b_{1+0,0} + a_{1+0,0} * b_{1+0,1}) \\
+& = (a_{1+0,1} + a_{1+0,0}) * (b_{1+0,1} + b_{1+0,0}) \\
+& - (a_{1+0,1} * b_{1+0,1}) \\
+& - (a_{1+0,0} * b_{1+0,0}) \\
+& \begin{array}{B3}
+           & 100100 \\
+      {} - &  10010 \\ 
+      {} - &    000 \\
+      \hline
+           &  10010 \\
+\end{array} \\
+\end{align*}
+\begin{align*}
+\text{Shift } & 2^n * (a_{1+0,1} * b_{1+0,1}) \\ 
+& 100100000 \\
+\text{Shift } & 2^{n/2} * (a_{1+0,1} * b_{1+0,0} + a_{1+0,0} * b_{1+0,1}) \\
+&   1001000 \\
+\text{Add } & 2^n * (a_{1+0,1} * b_{1+0,1}) \\
+& + 2^{n/2} * (a_{1+0,1} * b_{1+0,0} + a_{1+0,0} * b_{1+0,1}) \\
+& + (a_{1+0,0} * b_{1+0,0}) \\
+& 101101000 \\
+\end{align*}
+
+\begin{align*}
+\text{Initial values } & a_{1+0,1} = 11, b_{1+0,1} = 110 \\
+\text{Split up number } & a_{1+0,1,1} = 1, a_{1+0,1,0} = 1 \\
+\text{Split up number } & b_{1+0,1,1} = 11, b_{1+0,1,0} = 0 \\
+\text{Compute } & a_{1+0,1,1} + a_{1+0,1,0} \\
+& \begin{array}{B3}
+           & \carry01 \\
+      {} + & 1 \\ 
+      \hline
+           & 10 \\
+\end{array} \\
+\text{Compute } & b_{1+0,1,1} + b_{1+0,1,0} \\
+& \begin{array}{B3}
+           & 11 \\
+      {} + & 0 \\ 
+      \hline
+           & 11 \\
+\end{array} \\
+\text{Recursively multiply } & a_{1+0,1,1}, b_{1+0,1,1} \\
+& \begin{array}{B3}
+           & 1 \\
+      {} * & 11 \\ 
+      \hline
+           & 1 \\
+           & 10 \\
+      \hline
+           & 11 \\
+\end{array} \\
+\text{Recursively multiply } & a_{1+0,1,0}, b_{1+0,1,0} \\
+& \begin{array}{B3}
+           & 1 \\
+      {} * & 0 \\ 
+      \hline
+           & 0 \\
+\end{array} \\
+\text{Recursively multiply } & a_{1+0,1,1} + a_{1+0,1,0}, b_{1+0,1,1} + b_{1+0,1,0} \\
+& \begin{array}{B3}
+           & 10 \\
+      {} * & 11 \\ 
+      \hline
+           & 10 \\
+           & 100 \\
+      \hline
+           & 110 \\
+\end{array} \\
+\text{Compute } & (a_{1+0,1,1} * b_{1+0,1,0} + a_{1+0,1,0} * b_{1+0,1,1}) = (a_{1+0,1,1} \\
+& + a_{1+0,1,0}) * (b_{1+0,1,1} + b_{1+0,1,0}) \\
+& - (a_{1+0,1,1} * b_{1+0,1,1}) - (a_{1+0,1,0} * b_{1+0,1,0}) \\
+& \begin{array}{B3}
+           & 110 \\
+      {} - & 11 \\ 
+      {} - & 0 \\
+      \hline
+           & 11 \\
+\end{array} \\
+\text{Shift } & 2^n * (a_{1+0,1,1} * b_{1+0,1,1}) \\ 
+&  1100 \\
+\text{Shift } & 2^{n/2} * (a_{1+0,1,1} * b_{1+0,1,0} + a_{1+0,1,0} * b_{1+0,1,1}) \\
+&   110 \\
+\text{Add } & 2^n * (a_{1+0,1,1} * b_{1+0,1,1}) + 2^{n/2} * (a_{1+0,1,1} * b_{1+0,1,0} + a_{1+0,1,0} * b_{1+0,1,1}) + (a_{1+0,1,0} * b_{1+0,1,0}) \\
+& 10010 \\ 
+\end{align*}
+
+\begin{align*}
+\text{Initial values } & a_{1+0,1} + a_{1+0,0} = 110, b_{1+0,1} + b_{1+0,0} = 110 \\
+\text{Split up number } & a_{1+0,1*1+0,0;1} = 11, a_{1+0,1*1+0,0;0} = 0 \\
+\text{Split up number } & b_{1+0,1*1+0,0;1} = 11, b_{1+0,1*1+0,0;0} = 0 \\
+\text{Compute } & a_{1+0,1*1+0,0;1} + a_{1+0,1*1+0,0;0} \\
+& \begin{array}{B3}
+           & 11 \\
+      {} + & 0 \\ 
+      \hline
+           & 11 \\
+\end{array} \\
+\text{Compute } & b_{1+0,1*1+0,0;1} + b_{1+0,1*1+0,0;0} \\
+& \begin{array}{B3}
+           & 11 \\
+      {} + & 0 \\ 
+      \hline
+           & 11 \\
+\end{array} \\
+\text{Recursively multiply } & a_{1+0,1*1+0,0;1}, b_{1+0,1*1+0,0;1} \\
+& \begin{array}{B3}
+           & 11 \\
+      {} * & 11 \\ 
+      \hline
+           &  11 \\
+           & 110 \\
+      \hline
+           & 1001 \\
+\end{array} \\
+\text{Recursively multiply } & a_{1+0,1*1+0,0;0}, b_{1+0,1*1+0,0;0} \\
+& \begin{array}{B3}
+           & 0 \\
+      {} * & 0 \\ 
+      \hline
+           & 0 \\
+\end{array} \\
+\text{Recursively multiply } & a_{1+0,1*1+0,0;1} + a_{1+0,1*1+0,0;0}, b_{1+0,1*1+0,0;1} + b_{1+0,1*1+0,0;0} \\
+& \begin{array}{B3}
+           & 11 \\
+      {} * & 11 \\ 
+      \hline
+           &  11 \\
+           & 110 \\
+      \hline
+           & 1001 \\
+\end{array} \\
+\text{Compute } & (a_{1+0,1*1+0,0;1} * b_{1+0,1*1+0,0;0} + a_{1+0,1*1+0,0;0} * b_{1+0,1*1+0,0;1}) \\
+& = (a_{1+0,1*1+0,0;1} + a_{1+0,1*1+0,0;0}) * (b_{1+0,1*1+0,0;1} + b_{1+0,1*1+0,0;0}) \\ 
+& - (a_{1+0,1*1+0,0;1} * b_{1+0,1*1+0,0;1}) \\
+& - (a_{1+0,1*1+0,0;0} * b_{1+0,1*1+0,0;0}) \\
+& \begin{array}{B3}
+           & 1001 \\
+      {} - & 1001 \\ 
+      {} - & 0 \\
+      \hline
+           & 0 \\
+\end{array} \\
+\text{Shift } & 2^n * (a_{1+0,1*1+0,0;1} * b_{1+0,1*1+0,0;1}) \\ 
+&  100100 \\
+\text{Shift } & 2^{n/2} * (a_{1+0,1*1+0,0;1} * b_{1+0,1*1+0,0;0} + a_{1+0,1*1+0,0;0} * b_{1+0,1*1+0,0;1}) \\
+&   0 \\
+\text{Add } & 2^n * (a_{1+0,1*1+0,0;1} * b_{1+0,1*1+0,0;1}) + 2^{n/2} * (a_{1+0,1*1+0,0;1} * b_{1+0,1*1+0,0;0} \\
+& + a_{1+0,1*1+0,0;0} * b_{1+0,1*1+0,0;1}) \\
+& + (a_{1+0,1*1+0,0;0} * b_{1+0,1*1+0,0;0}) \\
+& 100100 \\ 
+\end{align*}
+
+\clearpage
+%========================================================
+
+%========================================================
+\section{Question 3}
+
+\begin{align*} 
+(a) \\
+T(n) &= 4T(n/5) + n \\
+&= n^{log_54} < n \\
+&= \Theta(n) \\
+\end{align*}
+
+\begin{align*} 
+(b) \\
+T(n) &= 6T(n/3) + n \\
+&= n^{log_36} > n \\
+&= \Theta(n^{log_36}) \\
+\end{align*}
+
+\begin{align*} 
+(c) \\
+T(n) &= 16T(n/4) + n^2 \\
+&= n^{log_416} == n^2 \\
+&= \Theta(n^2logn) \\
+\end{align*}
+
+\clearpage
+%========================================================
+
+%========================================================
+\section{Question 4}
+
+We iterate through the list of integers and XOR each of their k$^{th}$ bits together (a single column). The resulting bit's value is the same value as the missing integer's k$^{th}$ bit. For the next column, we only iterate through the list of integers which had the same k$^{th}$ bit as the previous value we found, cutting the search space in half. On the last recursive step (n==1), the resulting bit is inverted to obtain the missing integer's bit. We concatenate these bits together to obtain the integer. Each recursive step does $f(n)=n$ work due to iteration and divides the problem into one subproblem of half the original size.
+
+\begin{lstlisting}
+integer find_missing_integer(list_A, n)
+    bitpattern_to_integer(find_missing_integer_helper(list_A, n + 1, log(n)))
+
+bitpattern find_missing_integer_helper(list_A, n, pos)
+    if n == 1
+        return invert(list_A[0][pos])
+
+    leading_bit = 0
+    list_B = []
+
+    for i in range(0, n)
+        leading_bit = leading_bit XOR list_A[i][pos]
+
+
+    for i in range(0, n)
+        if leading_bit == list_A[i][pos]
+            append list_A[i] to list_B
+
+    return concatenate_bits(leading_bit, find_missing_integer(list_B, n/2, pos - 1))
+\end{lstlisting}
+
+\begin{align*} 
+T(n) &= 1T(n/2) + n \\
+&= n^{log_21} < n \\
+&= \Theta(n) \\
+\end{align*}
+
+\clearpage
+%========================================================
+
+\end{document}
+%:
