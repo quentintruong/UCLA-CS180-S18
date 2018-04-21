@@ -139,11 +139,132 @@
 %========================================================
 
 %========================================================
-\section{Ch1: }
-\subsection{Introduction}
+\section{Ch3: Graphs}
+\subsection{Basic Definitions and Applications}
     \begin{easylist}  
     \ListProperties(Hide=100, Hang=true, Progressive=4ex, Style*=--\ , Style2*=$\bullet\ $)
-        & 
+        & Graph is a collection V of nodes and collection E of edges
+        & Undirected Graph
+        && Edge is two-element subset of V
+        & Directed Graph
+        && Edge is an ordered pair of two vertices
+        & Applications
+        && Transportation networks: airplanes and trains
+        && Communication networks: wired and wireless
+        && Information networks: WWW as directed graph
+        && Social networks: used to study interactions among people, etc
+        && Dependency networks: university course offerings with prereqs, food web, software modules
+        & Paths and Connectivity
+        && Path in undirected graph is sequence of consecutive nodes joined by edges
+        && Path is simpe if all vertices are distinct
+        && Cycle is sequence of 3 or more vertices where first and last vertex are the same
+        && Undirected graph is connected if there is a path between all pairs of nodes
+        && Directed graph is strongly connected if for all nodes u and v, there is path uv and vu
+        && Distance between nodes is minimum number of edges
+        && Trees are undirected, connected graphs without cycles
+        &&& Orient edges away from each other, such that nodes are descendants of ancestors
+        &&& (3.1) Every n-node tree has exactly n-1 edges
+        && Rooted trees show a hierarchy
+        & (3.2) Let G be undirected graph on n nodes. Any two implies third
+        && G is connected
+        && G does not contain a cycle
+        && G has n-1 edges
+    \end{easylist}
+
+\subsection{Graph Connectivity and Graph Traversal}
+    \begin{easylist}  
+    \ListProperties(Hide=100, Hang=true, Progressive=4ex, Style*=--\ , Style2*=$\bullet\ $)
+        & S-T Connectivity (Maze-solving)
+        && Use BFS and DFS
+        & Breadth-First Search (BFS)
+        && (3.3) For each j $\ge$ 1, layer L$_j$ produced by BFS consists of all nodes at distance exactly j from s. There is a path from s to t iff t appears in some layer
+        && (3.4) Nodes X and Y in BFS tree in layers L$_i$ and L$_j$ are connected by an edge, then i and j differ by at most 1
+        & Exploring a Connected Component
+        && BFS discovers the set of reachable nodes
+        && Could discover this set in many ways
+        & Depth-First Search (DFS) (Maze-exploration)
+        && Explore as deeply as possible, retreat only when necessary 
+        && Maintain global knowledge of which nodes have been explored
+        & Set of all Connected Components
+        && (3.8) For any two nodes, their connected components are either identical or disjoint
+    \end{easylist}
+
+\subsection{Implementing Graph Traversal Using Queues and Stacks}
+    \begin{easylist}  
+    \ListProperties(Hide=100, Hang=true, Progressive=4ex, Style*=--\ , Style2*=$\bullet\ $)
+        & Representing Graphs
+        && Adjacency Matrix
+        &&& n x n matrix where A[u, v] is 1 if contains edge
+        &&& $\Theta$(n$^2$) space
+        &&& $\Theta$(n) time to find incident edges
+        && Adjacency List
+        &&& Reecord for each node v, containing list of nodes to which v has edges
+        &&& Total length of al lists is 2m = O(m)
+        &&& Much better for sparse
+        &&& O(m+n) space where m is edges n is nodes
+        & BFS - Queue
+        & DFS - Stack
+        & Finding Set of All Connected Components
+        && BFS/DFS a node, repeat on unconnnected nodes until find all groups
+    \end{easylist}
+
+\subsection{Testing Bipartiteness: Application of BFS}
+    \begin{easylist}  
+    \ListProperties(Hide=100, Hang=true, Progressive=4ex, Style*=--\ , Style2*=$\bullet\ $)
+        & (3.14) Bipartite graph cannot contain odd cycle
+        & Red-Blue
+        && Color node red, BFS, color all those blue, BFS, swap back to red
+        && Once all colored, scan all edges, check for edges with same colors on both sides of edge
+    \end{easylist}
+
+\subsection{Connectivity in Directed Graphs}
+    \begin{easylist}  
+    \ListProperties(Hide=100, Hang=true, Progressive=4ex, Style*=--\ , Style2*=$\bullet\ $)
+        & Directed Graphs
+        && Adjacency list has two list
+        &&& Nodes to which it has edges
+        &&& Nodes from which it has edges
+        & Graph Search Algorithms
+        && BFS/DFS will traverse set of nodes to which starting node is connected to
+        && If want set of nodes with paths to s (not set of nodes to which s has paths), reverse direction of every edge, then run BFS/DFS from this new s
+        & Strong Connectivity
+        && For every two nodes, there is path from u to v and v to u
+        & Mutually Reachable
+        && Path from u to v and v to u
+        & (3.17) For any two nodes, their strongly connected component is either identical or disjoint
+    \end{easylist}
+
+\subsection{Directed Acyclic Graphs and Topological Ordering}
+    \begin{easylist}  
+    \ListProperties(Hide=100, Hang=true, Progressive=4ex, Style*=--\ , Style2*=$\bullet\ $)
+        & Undirected Graph without cycles
+        && Each connected component is a tree
+        & Directed Acylic Graphs
+        && Used often as graph for dependencies 
+        & Topological Ordering
+        && Every edge points forward in the ordering
+        && Ordering of nodes, such that for every edge (v$_i$, v$_j$), we have i \textless j
+        && Topological ordering can provide immediate visual proof of no cycles
+        && Topological ordering implies DAG
+        && DAG implies topological ordering
+        & Computing Topological Ordering
+        && Find node with no incoming edges, place it first
+        && Delete that node
+        && Recursively compute topological ordering for rest of graph
+        && Append deleted node to front of remaining topological ordeing
+        && Complexity Analysis
+        &&& O(n$^2$) - Trivially search
+        &&& O(m+n) - If track number of incoming edges for each node and set of nodes without incoming edges
+    \end{easylist}
+\clearpage
+%========================================================
+
+%========================================================
+\section{Ch3: Graphs}
+\subsection{Basic Definitions and Applications}
+    \begin{easylist}  
+    \ListProperties(Hide=100, Hang=true, Progressive=4ex, Style*=--\ , Style2*=$\bullet\ $)
+        &
     \end{easylist}
 \clearpage
 %========================================================
