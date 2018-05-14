@@ -20,7 +20,7 @@
 
 
 %========================================================
-\section{Algorithm Design: Ch5: Divide and Conquer}
+\section{Ch5: Divide and Conquer}
 \subsection{Introduction}
 	\begin{easylist}  
 	\ListProperties(Hide=100, Hang=true, Progressive=4ex, Style*=--\ , Style2*=$\bullet\ $)
@@ -260,11 +260,96 @@
 %========================================================
 
 %========================================================
-\section{Ch3: Graphs}
+\section{Ch4: Greedy Algorithms}
+\subsection{Introduction}
+    \begin{easylist}  
+    \ListProperties(Hide=100, Hang=true, Progressive=4ex, Style*=--\ , Style2*=$\bullet\ $)
+        & Greedy
+        && Builds up solution in samll steps, choosing decision at each step to myopically optimize some underlying criterion
+        && Sometimes can even create algorithms with greedy rules which are guaranteed to be close, but not equal, to optimum
+        & Proving
+        && Show step-by-step that greedy is better than any other algorithm, including optimal
+        && Gradually exchange parts of any solution with the greedy solution, showing that the greedy never hurts the quality of solution
+    \end{easylist}
+
+\subsection{Interval Scheduling: The Greedy Algorithm Stays Ahead}
+    \begin{easylist}  
+    \ListProperties(Hide=100, Hang=true, Progressive=4ex, Style*=--\ , Style2*=$\bullet\ $)
+        & Interval Scheduling Problem Statement
+        && Set of requests, each with starting and finishing time
+        && Compatible (no two overlap in time) sets of maximum size is called optimal
+        & Designing a Greedy
+        && Use simple rule to select first request $i_1$, then reject any requests which are not compatible with $i_1$
+        && Many wrong solutions
+        && Smallest Finishing Time is a good rule
+        && Intuition is that we want our resource to become free as soon as possible
+        & Analyzing the Algorithm
+        && All requests will definitely be compatible
+        && Cannot show that this produces the optimal, because there are many optimal algorithms
+        && Simply show that this algorithm contains same number of intervals as the optimal
+        && Do this by comparing partial solutions from greedy to the optimal and show that greedy is doing as good or better
+        & Proof
+        && Let Greedy Algorithm produce set of requests A = $i_1, ..., i_k$
+        && Let Optimal set O = $j_1, ..., j_m$
+        && Greedy rule guarantees $f(i_1) \le f(j_1)$
+        && Goal is to show $k = m$
+        && (4.2) Lemma: For all indices $r \le k$ we have $f(i_r) \le f(j_r)$
+        &&& Proof by induction
+        &&& This is true for $r=1$
+        &&& Suppose true for $r-1$, prove for $r$
+        &&& Wrt one step, greedy would only finish after optimal if it chose a later-finishing interval.
+        &&& Formally, $f(j_{r-1}) \le s(j_r)$ by compatibility
+        &&& $f(i_{r-1}) \le s(j_r)$ bc $f(i_{r-1}) \le f(j_{r-1})$ 
+        &&& So greedy can always pick the same job as optimal
+        && (4.3) Greedy algorithm returns an optimal set
+        &&& Since next request from optimal starts after $j_k$ and thus after $i_k$, Greedy is able to pick it
+        & Interval Partitioning Problem
+        && Ex: Lectures at predefined start/end times need to be scheduled in classrooms, want to minimize number of classrooms used
+        && Depth is the maximum number of set of intervals that pass over any single point in time
+        && Number of resources needed is at least the $d=$ depth of set of intervals
+        && Assign label to each interval, label is in range from $1, ..., depth$
+        && Basically, just sweep through interval left to right, assigning nonconflicting labels to intervals
+        && (4.5) Every interval will be assigned a label and no two overlapping intervals will receive same label
+        && Proof 
+        &&& Consider one interval $I_j$ and $t$ intervals earlier that overlap it
+        &&& Then there are $t+1 \le d$ and so $t \le d-1$
+        &&& So there is at least one label which can be assigned to $I_j$
+        &&& No intervals overlap because no labels are reassigned in same interval by definition
+    \end{easylist}
+
+\subsection{Shortest Paths in a Graph}
+    \begin{easylist}  
+    \ListProperties(Hide=100, Hang=true, Progressive=4ex, Style*=--\ , Style2*=$\bullet\ $)
+        & Single-source Shortest-paths Problem
+        && Dijkstra
+        && Maintain set S of vertices u for which we have determined a shortest-path distance
+        && Extend set by finding vertex with path through explored set with minimum cost
+        && (4.14) Consider set S at any point in algorithm's execution. For each $u \in S$ the path $P_u$ is a shortest path $s-u$ path
+        && Proof by induction
+        &&& Base case is trivial
+        &&& Suppose true for $|S|=k$, prove for $k+1$ by adding node $v$ using edge $(u, v)$ to complete path $P_v$
+        &&& By induction, $P_u$ is shortest from $s-u, u \in S$
+        &&& Any other path $s-v$ must be at least as long as $P_v$ because it is already at least as long as $P_v$ by the time it leaves set $S$
+        &&& This is because Dijkstra had already considered adding other nodes, but chose not to do that because they are not the smallest path available
+        & Dijkstra does not work with negative lengths
+        & Dijkstra as droplet propagation in a system of water pipes
+        & Can use heap to run in O(E * log V)
+    \end{easylist}
+
+\subsection{}
+    \begin{easylist}  
+    \ListProperties(Hide=100, Hang=true, Progressive=4ex, Style*=--\ , Style2*=$\bullet\ $)
+        & 
+    \end{easylist}
+\clearpage
+%========================================================
+
+%========================================================
+\section{Ch4: Greedy Algorithms}
 \subsection{Basic Definitions and Applications}
     \begin{easylist}  
     \ListProperties(Hide=100, Hang=true, Progressive=4ex, Style*=--\ , Style2*=$\bullet\ $)
-        &
+        & 
     \end{easylist}
 \clearpage
 %========================================================
