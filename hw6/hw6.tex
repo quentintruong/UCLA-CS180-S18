@@ -1,0 +1,140 @@
+\documentclass[11pt, oneside]{article}  
+\usepackage[margin=0.5in]{geometry} % Margins
+\usepackage[ampersand]{easylist} % Bullets for lists
+\usepackage[bottom]{footmisc}  % Glue footnotes to bottom
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{array,mathtools}
+
+\newcommand*{\carry}[1][1]{\overset{#1}}
+\newcolumntype{B}[1]{r*{#1}{@{\,}r}}
+
+\title{Homework 6\\UCLA-CS180-S18}
+\author{Quentin Truong}
+
+
+\begin{document}
+\maketitle
+\pagenumbering{arabic}
+
+
+%========================================================
+\section{Question 1}
+
+1)  Algorithm \newline
+\begin{lstlisting}
+FIND-IS (G, k)
+    if not INDEPENDENT-SET(G, k)
+        return {}
+
+    independent_set = {}
+    for vertex in G.vertices
+        G2 = G - vertex // remove vertex and associated edges
+        if INDEPENDENT-SET(G2, k)
+            G = G2
+        else
+            independent_set += vertex
+
+    return independent_set
+\end{lstlisting}
+2)  Proof \newline
+    Suppose there does not exist an independent set of size k in G \newline
+    Then FIND-IS will return the empty set \newline
+    Otherwise, there exist an independent set of size k in G \newline
+    Iterating through each vertex x of G, we remove x from G and check if the resulting graph still has an independent set of size k. If it does, then we may safely remove that vertex from the graph, because there still exist some independent set of size k. If it does not, then we know that vertex x is necessary for an independent set. Thus, we keep the vertex in the graph and we add it to our independent\_set. Since we only remove vertices when we are guaranteed an independent set still exist, and we only add vertices when an independent set ceases to exist, we are guaranteed to end  with an independent set. \newline
+\clearpage
+%========================================================
+
+%========================================================
+\section{Question 2}
+
+1)  Transformation \newline
+    Transform $\phi$ into the following described graph. \newline
+    For each variable $x$ in $\phi$, represent $x$ as vertex $x$ connected by an edge to another vertex $-x$. (Will refer to these vertices and edges as the top row) \newline
+    Below those vertices, for each variable $x1, x2, x3$ in each clause in $\phi$, represent $x1, x2, x3$ as vertices and fully connect them by edges. (Will refer to these vertices and edges as the bottom row) \newline 
+    Then, connect each vertex $x1, x2, x3$ from each clause to their respective vertices from the top row. \newline
+    Set vertex cover size k = 2 * number of variables + 3 * number of clauses. \newline
+2)  Proving =\textgreater \newline
+    Suppose we have a satisfying assignment for $\phi$. \newline
+    Then, from the top row of vertices, select vertices that are true variables. For example, if x were assigned true, select vertex x; otherwise, select -x. This will result in all top row edges having at least one end in the selected set. This will be a total of $n$ vertices, where $n$ is the number of variables in $\phi$. \newline
+    Then, from the bottom vertices, select the two non-true variables. This will result in bottom row edges having at least one end in the selected set. Note that because we selected the non-true variables in the bottom, and true variables in the top, the edges connecting bottom and top will still have at least one end in the selected set (true variables in the top are connected to true variables in the bottom, so need to select true in top and false in bottom, otherwise we would be covering both ends of a single edge and not covering at least one end of edges connected to non-true variables). This will be a total of $2 * m$ vertices, where $m$ is the number of clauses in $\phi$. \newline
+    Then, we have a vertex cover with exactly $k = n + 2 * m$. \newline
+3)  Proving \textless= \newline
+    Suppose we have a vertex set of size at least $k = n + 2 * m$. \newline
+    Then, $n$ of those vertices must belong to the top row vertices, otherwise we would not have a vertex cover. \newline
+    Allowing those $n$ vertices to be the satisfying assignment for our variables, notice that the remaing $2 * m$ vertices must cover the non-true variables in the bottom row. If one covered a true variable, then we would not have a vertex cover because at least one end of an edge connected to a non-true variable would be uncovered. This results in one true variable per clause. \newline
+    Then, we have a satisfying variable assignment. \newline
+\clearpage
+%========================================================
+
+%========================================================
+\section{Question 3}
+1)  Transformation from 3-SAT to LPS \newline
+    For each variable in $\phi$, reorder variables such that each variable is AND with some other variables. AND with zeroes as necessary. Create n many rows, with n ANDs per row. Pad as necessary. Then we have an equation like
+$
+    ((a_{11} \cap x_1) \cup ... \cup (a_{1n} \cap x_n) \cup (\neg b_1)) \cap ... \cap ((a_{n1} \cap x_1) \cup ... \cup (a_{nn} \cap x_n) \cup (\neg b_n)) = TRUE
+$   \newline \newline
+    Transform matrix into a single boolean expression by joining each row with boolean AND. \newline
+    $
+\begin{bmatrix}
+    (a_{11} \cap x_1) \cup ... \cup (a_{1n} \cap x_n) \cup (\neg b_1) \\
+    ... \\
+    (a_{n1} \cap x_1) \cup ... \cup (a_{nn} \cap x_n) \cup (\neg b_n) \\
+\end{bmatrix} = 
+\begin{bmatrix}
+    TRUE \\
+    ... \\
+    TRUE \\
+\end{bmatrix} 
+$   \newline \newline
+    Transform multiplication into boolean AND. Transform addition into boolean OR. Transform subtraction into boolean OR with negation over the following variable. Interpret nonzero numbers as TRUE; interpret zeros are FALSE. Transform the zeroes on the right hand side to TRUE. \newline
+$
+\begin{bmatrix}
+    (a_{11} * x_1) + ... + (a_{1n} * x_n) - (b_1) \\
+    ... \\
+    (a_{n1} * x_1) + ... + (a_{nn} * x_n) - (b_n) \\
+\end{bmatrix} \ge 
+\begin{bmatrix}
+    0 \\
+    ... \\
+    0 \\
+\end{bmatrix}
+$   \newline \newline
+    For arbitrary matrix $A$ in $R^{nxn}$, vector $x$ in $R^n$, and vector $b$ in $R^n$, form $Ax - b \ge 0$ \newline
+2)  Proving =\textgreater \newline
+    Suppose we have $phi$ in CNF form \newline
+    This boolean expression may be converted without loss of information to \newline
+    $
+    ((a_{11} \cap x_1) \cup ... \cup (a_{1n} \cap x_n) \cup (\neg b_1)) \cap ... \cap ((a_{n1} \cap x_1) \cup ... \cup (a_{nn} \cap x_n) \cup (\neg b_n)) = TRUE
+    $ \newline \newline
+    Then we split up the n rows into a matrix \newline
+    Then, we transform AND to multiplication, OR to addition, and NEGATE to subtraction \newline
+    Then we solve using LQS \newline
+3)  Proving \textless= \newline
+    Suppose we have $Ax \ge b$ \newline
+    Multiplying and subtracting, we receive $Ax - b \ge 0$ \newline
+    We may convert this to boolean expressions \newline
+    Then this boolean expression may be put into CNF form and solved by SAT \newline
+\clearpage
+%========================================================
+
+%========================================================
+\section{Question 4}
+
+a)  Proof \newline
+    Let a bijective mapping from vertices of G to vertices of H be the certificate. \newline
+    The verifier algorithm will be as follows: \newline
+    Confirm that the mapping is a bijection between vertices of G and vertices of H. This can run in polynomial time because we are just checking one-to-one and onto. \newline
+    Apply the mapping to vertices/edges of G and confirm that all of the transformed edges are in H. This can run in polynomial time because we are just confirming the existence of edges. \newline
+    Since there exist a polynomial verifier for graph isomorphism, graph isomorphism is in NP. \newline
+
+B)  Proof \newline
+    Let a subset of vertices of I be the certificate. \newline
+    The verifier algorithm will be as follows: \newline
+    For each vertex x in graph I, confirm that either x is in the subset of vertices or that x is connected by an edge to another vertex which is in the subset of vertices. This can run in polynomial time because we are just checking the relationship of vertices of a subset to vertices of the graph. \newline
+    Since there exist a polynomial verifier for graph isomorphism, graph isomorphism is in NP. \newline
+\clearpage
+%========================================================
+
+\end{document}
